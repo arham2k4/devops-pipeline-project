@@ -10,7 +10,7 @@ app.get('/health', (req, res) => {
 // Main endpoint
 app.get('/', (req, res) => {
   res.json({
-    message: 'Hello from Arham\'s CI/CD Pipeline Project!',
+    message: 'v2: Automated deployment via GitHub Actions!',
     hostname: require('os').hostname(),
     version: '1.0.0'
   });
