@@ -237,3 +237,22 @@ resource "aws_ecs_service" "app_service" {
 output "alb_dns_name" {
   value = aws_lb.app_alb.dns_name
 }
+
+# ---------- CloudWatch Alarm: High CPU ----------
+resource "aws_cloudwatch_metric_alarm" "high_cpu" {
+  alarm_name          = "arham-ecs-high-cpu"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods   = 2
+  metric_name          = "CPUUtilization"
+  namespace            = "AWS/ECS"
+  period               = 60
+  statistic            = "Average"
+  threshold            = 80
+
+  dimensions = {
+    ClusterName = aws_ecs_cluster.main.name
+    ServiceName = aws_ecs_service.app_service.name
+  }
+
+  alarm_description = "Triggers when ECS service CPU exceeds 80%"
+}
