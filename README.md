@@ -5,24 +5,35 @@ A fully automated deployment pipeline for a containerized Node.js application. E
 
 ## 🏗️ Architecture
 
-Developer → git push → GitHub Actions
-│
-┌──────────────┼──────────────┐
-▼ ▼ ▼
-Build Docker Push to ECR Deploy to ECS
-image (Fargate)
-│
-▼
-Application Load Balancer
-│
-┌──────────┴──────────┐
-▼ ▼
-ECS Task (AZ-1) ECS Task (AZ-2)
-│ │
-└─────────┬───────────┘
-▼
-CloudWatch Logs
-+ CPU Alarm
+```mermaid
+flowchart TD
+    Dev([Developer]) -->|git push| GHA
+
+    subgraph CICD["CI/CD Pipeline"]
+        GHA[GitHub Actions] --> Build[Build Docker Image]
+        Build --> ECR[(Push to Amazon ECR)]
+        ECR --> Deploy[Deploy to ECS Fargate]
+    end
+
+    Deploy --> ALB{{Application Load Balancer}}
+
+    subgraph AWS["AWS ECS Fargate Cluster"]
+        ALB --> T1[ECS Task<br/>AZ-1]
+        ALB --> T2[ECS Task<br/>AZ-2]
+    end
+
+    T1 --> CW[CloudWatch Logs]
+    T2 --> CW
+```
+
+### How it works
+
+1. A developer pushes code to GitHub.
+2. **GitHub Actions** builds the Docker image.
+3. The image is pushed to **Amazon ECR**.
+4. The new version is deployed to **ECS (Fargate)**.
+5. The **Application Load Balancer** distributes traffic across tasks in two Availability Zones for high availability.
+6. All tasks send their logs to **CloudWatch Logs**.
 
 
 ## 🛠️ Tech Stack
