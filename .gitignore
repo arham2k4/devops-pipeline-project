@@ -1,5 +1,8 @@
-node_modules/
-terraform/.terraform/
-terraform/*.tfstate
-terraform/*.tfstate.backup
+node_modules
+npm-debug.log
+.git
 .env
+terraform
+.github
+README.md
+*.md

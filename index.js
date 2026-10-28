@@ -10,7 +10,7 @@ app.get('/health', (req, res) => {
 // Main endpoint
 app.get('/', (req, res) => {
   res.json({
-    message: 'v2: Automated deployment via GitHub Actions!',
+    message: 'v3: Rebuilt manually via AWS Console, deployed via GitHub Actions!',
     hostname: require('os').hostname(),
     version: '1.0.0'
   });
